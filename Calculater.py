@@ -10,6 +10,7 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QApplication, QPushButton
+from pygame.examples.glcube import translate
 
 
 class Ui_Form(QWidget):
@@ -17,6 +18,8 @@ class Ui_Form(QWidget):
         super().__init__()
         self.setupUi(self)
         self.sentence = []
+        self.dict = {'÷' : '/',
+                     '×' : '*'}
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -149,7 +152,7 @@ class Ui_Form(QWidget):
         font.setWeight(75)
         font.setStrikeOut(True)
         self.funSubtraction.setFont(font)
-        self.funSubtraction.setObjectName("funsubtraction")
+        self.funSubtraction.setObjectName("funSubtraction")
         self.num8 = QtWidgets.QPushButton(Form)
         self.num8.setGeometry(QtCore.QRect(60, 100, 50, 50))
         font = QtGui.QFont()
@@ -195,21 +198,21 @@ class Ui_Form(QWidget):
 
         self.retranslateUi(Form)
         self.clear.clicked.connect(self.monitor.clear)
-        self.num0.clicked.connect()
-        self.num1.clicked.connect()
-        self.num2.clicked.connect()
-        self.num3.clicked.connect()
-        self.num4.clicked.connect()
-        self.num5.clicked.connect()
-        self.num6.clicked.connect()
-        self.num7.clicked.connect()
-        self.num8.clicked.connect()
-        self.num9.clicked.connect()
-        self.funPlus.clicked.connect()
-        self.funDivide.clicked.connect()
-        self.funSubtraction.clicked.connect()
-        self.funMultiplication.clicked.connect()
-        self.funEqual.clicked.connect()
+        self.num0.clicked.connect(self.putOn)
+        self.num1.clicked.connect(self.putOn)
+        self.num2.clicked.connect(self.putOn)
+        self.num3.clicked.connect(self.putOn)
+        self.num4.clicked.connect(self.putOn)
+        self.num5.clicked.connect(self.putOn)
+        self.num6.clicked.connect(self.putOn)
+        self.num7.clicked.connect(self.putOn)
+        self.num8.clicked.connect(self.putOn)
+        self.num9.clicked.connect(self.putOn)
+        self.funPlus.clicked.connect(self.putOn)
+        self.funDivide.clicked.connect(self.putOn)
+        self.funSubtraction.clicked.connect(self.putOn)
+        self.funMultiplication.clicked.connect(self.putOn)
+        self.funEqual.clicked.connect(self.solve)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -241,6 +244,26 @@ class Ui_Form(QWidget):
             i = button.text()
         self.sentence.append(i)
         self.monitor.setText(str(self.sentence))
+
+    def solve(self):
+        s0 = str(self.sentence)
+        s1 = self.translate(s0)
+        try:
+            answer = str(eval(s1))
+            self.sentence = [answer]
+            self.monitor.setText(answer)
+        except:
+            self.sentence = []
+            self.monitor.setText("Error")
+
+    def translate(self, s0):
+        s1 = ''
+        for c in s0:
+            if c in self.dict:
+                s1 += self.dict[c]
+            else:
+                s1 += c
+        return s1
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
